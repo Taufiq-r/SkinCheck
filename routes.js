@@ -1,5 +1,4 @@
 const express = require('express');
-const { scrapeSkinCareArticle } = require('./scraper/scraper');
 const articlesRouter = require('./articles_api');
   
 const router = express.Router();
@@ -19,16 +18,6 @@ router.get('/home', (req, res) => {
   res.status(200).send(homeData);
 });
 
-// Endpoint untuk mengambil artikel kesehatan kulit
-router.get('/api/articles', async (req, res) => {
-  const articleUrl = 'https://www.healthline.com/skin-care'; 
-  try {
-    const article = await scrapeSkinCareArticle(articleUrl);
-    res.status(200).send({ article });
-  } catch (error) {
-    res.status(500).send({ error: 'Error scraping article' });
-  }
-});
 
 // Endpoint untuk data artikel Firebase
 router.use('/api', articlesRouter); // Integrasikan endpoint `articles_api.js`
