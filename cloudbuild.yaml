@@ -2,7 +2,11 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$skin-check-capstone/skincheck-backend', '.']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'my-api', '--image', 'gcr.io/$PROJECT_ID/my-api', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'my-api', '--image', 'gcr.io/$skin-check-capstone/skincheck-backend', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
 images:
   - 'gcr.io/$skin-check-capstone/skincheck-backend'
+
+options:
+  logging: REGIONAL_USER_OWNED_BUCKET
+  logBucket: "gs://logsskincheck"
