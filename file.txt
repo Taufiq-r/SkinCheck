@@ -1,0 +1,2 @@
+test google cloud storage
+gsutil versioning get gs://nama_bucket
