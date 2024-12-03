@@ -1,18 +1,10 @@
 const express = require("express");
-const admin = require("firebase-admin");
+const { admin } = require("./config/firebase"); // Ambil admin langsung dari firebase.js
 
-const app = express();
-const PORT = 8080;
+const router = express.Router();
 
-// Inisialisasi Firebase Admin SDK
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-});
-
-const db = admin.firestore();
-
-// Endpoint untuk mendapatkan data penyakit kulit berdasarkan ID
-app.get("/default/articles", async (req, res) => {
+// Endpoint untuk mendapatkan data artikel berdasarkan ID
+router.get("/articles", async (req, res) => {
   const diseaseId = req.query.id;
 
   if (!diseaseId) {
@@ -24,7 +16,7 @@ app.get("/default/articles", async (req, res) => {
     const doc = await diseaseRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: "Data penyakit tidak ditemukan." });
+      return res.status(404).json({ error: "Data artikel tidak ditemukan." });
     }
 
     res.status(200).json({ data: doc.data() });
@@ -34,7 +26,4 @@ app.get("/default/articles", async (req, res) => {
   }
 });
 
-// Menjalankan server
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+module.exports = router;
