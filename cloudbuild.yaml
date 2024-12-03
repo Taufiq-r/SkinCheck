@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/skincheck-backend', '.']
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    args: ['gcloud', 'run', 'deploy', 'SkinCheck', '--image', 'gcr.io/$PROJECT_ID/skincheck-backend', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    args: ['gcloud', 'run', 'deploy', 'skincheck', '--image', 'gcr.io/$PROJECT_ID/skincheck-backend', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
 images:
   - 'gcr.io/$PROJECT_ID/skincheck-backend'
