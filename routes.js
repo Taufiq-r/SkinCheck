@@ -1,5 +1,7 @@
 const express = require('express');
-const { scrapeSkinCareArticle } = require('./scraper/scraper');  
+const { scrapeSkinCareArticle } = require('./scraper/scraper');
+const articlesRouter = require('./articles_api');
+  
 const router = express.Router();
 
 // Endpoint home
@@ -27,6 +29,9 @@ router.get('/api/articles', async (req, res) => {
     res.status(500).send({ error: 'Error scraping article' });
   }
 });
+
+// Endpoint untuk data artikel Firebase
+router.use('/api', articlesRouter); // Integrasikan endpoint `articles_api.js`
 
 // Endpoint healthcheck untuk simulasi
 router.get('/api/healthcheck', (req, res) => {
