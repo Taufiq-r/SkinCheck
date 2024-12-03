@@ -3,6 +3,7 @@ const { admin } = require("./config/firebase"); // Ambil admin langsung dari fir
 
 const router = express.Router();
 
+const db = admin.firestore();
 // Endpoint untuk mendapatkan data artikel berdasarkan ID
 router.get("/articles", async (req, res) => {
   const diseaseId = req.query.id;
