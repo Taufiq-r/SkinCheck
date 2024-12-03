@@ -1,0 +1,19 @@
+{
+  "name": "skincheck-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google-cloud/secret-manager": "^5.6.0",
+    "axios": "^1.7.8",
+    "cheerio": "^1.0.0",
+    "express": "^4.21.1",
+    "firebase-admin": "^13.0.1"
+  }
+}
