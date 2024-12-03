@@ -8,5 +8,4 @@ images:
   - 'gcr.io/$skin-check-capstone/skincheck-backend'
 
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET
-  logBucket: "gs://logsskincheck"
+  logging: CLOUD_LOGGING_ONLY
