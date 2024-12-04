@@ -5,13 +5,15 @@ const { getFirebaseCredentials } = require('./secretManager');
 async function initializeFirebase() {
   try {
     const serviceAccount = await getFirebaseCredentials();
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-    console.log('Firebase initialized successfully');
+    if (admin.apps.length === 0) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      console.log('Firebase initialized successfully.');
+    }
   } catch (error) {
     console.error('Error initializing Firebase Admin:', error);
   }
 }
 
-module.exports = { initializeFirebase };
+module.exports = { admin, initializeFirebase };
