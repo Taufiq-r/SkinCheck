@@ -1,8 +1,33 @@
+// routes/routes.js
+
 const express = require('express');
-const { scrapeSkinCareArticle } = require('./scraper/scraper');
-const articlesRouter = require('./articles_api');
-  
+const multer = require('multer');
+const { scrapeSkinCareArticle } = require('../scraper/scraper');
+const articlesRouter = require('../articles_api');
+const { predictImage } = require('../services/predict'); // Mengimpor predictImage dari services/predict.js
+
 const router = express.Router();
+
+// Konfigurasi multer untuk menangani upload file gambar
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Endpoint untuk menerima gambar dan melakukan prediksi
+router.post('/api/predict', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+
+  try {
+    // Menggunakan fungsi prediksi dari `services/predict.js`
+    const result = await predictImage(req.file.buffer);
+
+    // Mengirimkan hasil prediksi
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Error processing image' });
+  }
+});
 
 // Endpoint home
 router.get('/home', (req, res) => {
