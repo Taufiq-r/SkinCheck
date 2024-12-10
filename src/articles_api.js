@@ -1,17 +1,31 @@
 const express = require("express");
 const admin = require("firebase-admin");
+const { getFirebaseCredentials } = require("./config/secretManager"); // Import fungsi getFirebaseCredentials
 
 const router = express.Router();
 
-// Pastikan Firestore hanya diinisialisasi jika admin sudah terinisialisasi
-if (!admin.apps.length) {
-  admin.initializeApp();
-} else {
-  admin.app(); // Menggunakan aplikasi yang sudah ada jika sudah diinisialisasi
+// Inisialisasi Firebase setelah mendapatkan kredensial dari Secret Manager
+async function initializeFirebase() {
+  try {
+    const serviceAccount = await getFirebaseCredentials();
+
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+      });
+    } else {
+      admin.app(); // Menggunakan aplikasi yang sudah ada jika sudah diinisialisasi
+    }
+
+    console.log("Firebase Admin SDK Initialized");
+  } catch (error) {
+    console.error("Error initializing Firebase Admin SDK:", error);
+  }
 }
 
+initializeFirebase();
+
 const db = admin.firestore();
-console.log("Firebase Admin SDK Initialized:", db);
 
 // Endpoint untuk mendapatkan data artikel berdasarkan ID
 router.get("/data", async (req, res) => {
