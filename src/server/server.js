@@ -1,5 +1,3 @@
-// routes/server.js
-
 const express = require('express');
 const { initializeFirebase } = require('../config/firebase'); // Mengimpor firebase dari folder config
 const routes = require('./routes'); // Mengimpor routes dari file routes.js

@@ -1,9 +1,9 @@
 {
   "name": "skin-check-backend",
   "version": "1.0.0",
-  "main": "routes/server.js",
+  "main": "src/server/server.js",
   "scripts": {
-    "start": "node routes/server.js"
+    "start": "node src/server/server.js"
   },
   "dependencies": {
     "@google-cloud/secret-manager": "^5.6.0",

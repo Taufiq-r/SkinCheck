@@ -1,8 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const admin = require('firebase-admin');
-const { getFirebaseCredentials } = require('./config/secretManager');
-const { scrapeSkinCareArticle } = require('../scraper/scraper');
+const { getFirebaseCredentials } = require('../config/secretManager');
 const { predictImage } = require('../services/predict'); // Mengimpor predictImage dari services/predict.js
 
 const router = express.Router();
