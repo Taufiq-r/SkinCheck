@@ -1,16 +1,25 @@
 {
-  "name": "skin-check-backend",
-  "version": "1.0.0",
-  "main": "src/server/server.js",
-  "scripts": {
-    "start": "node src/server/server.js"
-  },
-  "dependencies": {
-    "@google-cloud/secret-manager": "^5.6.0",
-    "@tensorflow/tfjs": "^3.21.0",
-    "@tensorflow/tfjs-node": "^4.22.0",
-    "canvas": "^2.11.2",
-    "express": "^4.21.2",
-    "multer": "^1.4.4"
-  }
+    "name": "asclepius-backend",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start:dev": "nodemon ./src/server/server.js",
+        "start": "node ./src/server/server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@google-cloud/firestore": "^7.11.0",
+        "@google-cloud/secret-manager": "^5.6.0",
+        "@hapi/hapi": "^21.3.12",
+        "@tensorflow/tfjs-node": "^4.14.0",
+        "dotenv": "^16.4.7",
+        "firebase-admin": "^13.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    },
+    "description": ""
 }

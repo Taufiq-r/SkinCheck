@@ -1,23 +1,20 @@
-# Gunakan image node.js resmi
+# Gunakan image Node.js versi 18
 FROM node:18
 
-# Tentukan direktori kerja di dalam container
-WORKDIR /usr/src/app
+# Set working directory di dalam container
+WORKDIR /app
 
-# Salin package.json dan package-lock.json
+# Salin package.json dan package-lock.json terlebih dahulu untuk mengoptimalkan cache layer
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Salin seluruh file aplikasi ke dalam container
+# Salin seluruh kode sumber ke dalam container
 COPY . .
 
-# Set environment variables untuk Firebase
-ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/src/config/firebase-service-account.json
+# Expose port yang digunakan aplikasi
+EXPOSE 4000
 
-# Expose port untuk aplikasi
-EXPOSE 8080
-
-# Jalankan aplikasi
+# Tentukan perintah untuk menjalankan aplikasi
 CMD ["node", "src/server/server.js"]

@@ -1,28 +1,17 @@
-const express = require('express');
-const multer = require('multer');
 const admin = require('firebase-admin');
 const { getFirebaseCredentials } = require('../config/secretManager');
-const { predictImage } = require('../services/predict'); // Mengimpor predictImage dari services/predict.js
+const { predictImage } = require('../services/predict'); // Import predictImage
 
-const router = express.Router();
-
-// Konfigurasi multer untuk menangani upload file gambar
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Inisialisasi Firebase setelah mendapatkan kredensial dari Secret Manager
 async function initializeFirebase() {
   try {
     const serviceAccount = await getFirebaseCredentials();
-
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
+        credential: admin.credential.cert(serviceAccount),
       });
     } else {
-      admin.app(); // Menggunakan aplikasi yang sudah ada jika sudah diinisialisasi
+      admin.app();
     }
-
     console.log("Firebase Admin SDK Initialized");
   } catch (error) {
     console.error("Error initializing Firebase Admin SDK:", error);
@@ -30,95 +19,100 @@ async function initializeFirebase() {
   }
 }
 
-// Menginisialisasi Firebase dan kemudian mendefinisikan db
-async function startServer() {
-  try {
-    await initializeFirebase(); // Tunggu hingga Firebase diinisialisasi
-
-    const db = admin.firestore(); // Inisialisasi db setelah Firebase siap
-
-    // Endpoint untuk mendapatkan data artikel berdasarkan ID
-    router.get("/api/articles/data", async (req, res) => {
-      const diseaseId = req.query.id;
-
+const routes = [
+  {
+    method: 'GET',
+    path: '/api/articles/data',
+    handler: async (request, h) => {
+      const diseaseId = request.query.id;
       if (!diseaseId) {
-        return res.status(400).json({ error: "Parameter 'id' diperlukan." });
+        return h.response({ error: "Parameter 'id' required." }).code(400);
       }
 
       try {
+        const db = admin.firestore();
         const diseaseRef = db.collection("articles").doc(diseaseId);
         const doc = await diseaseRef.get();
 
         if (!doc.exists) {
-          return res.status(404).json({ error: "Data artikel tidak ditemukan." });
+          return h.response({ error: "Article data not found." }).code(404);
         }
 
-        res.status(200).json({ data: doc.data() });
+        return h.response({ data: doc.data() }).code(200);
       } catch (error) {
-        console.error("Error detail:", error.message, error.stack);
-        res.status(500).json({ error: "Terjadi kesalahan server." });
+        console.error("Error:", error);
+        return h.response({ error: "Server error." }).code(500);
       }
-    });
-
-    // Endpoint untuk menerima gambar dan melakukan prediksi
-    router.post('/api/predict', upload.single('file'), async (req, res) => {
-      if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+    },
+  },
+  {
+    method: 'POST',
+    path: '/api/predict',
+    options: {
+      payload: {
+        maxBytes: 10485760, // Limit file size to 10MB
+        parse: true,
+        output: 'data', // Get the file data as a buffer
+      },
+    },
+    handler: async (request, h) => {
+      const file = request.payload.file;
+      if (!file) {
+        return h.response({ error: 'No file uploaded' }).code(400);
       }
 
       try {
-        // Menggunakan fungsi prediksi dari `services/predict.js`
-        const result = await predictImage(req.file.buffer);
-
-        // Mengirimkan hasil prediksi
-        res.json(result);
+        const result = await predictImage(file);
+        return h.response(result).code(200);
       } catch (error) {
-        res.status(500).json({ error: 'Error processing image' });
+        return h.response({ error: 'Error processing image' }).code(500);
       }
-    });
-
-    // Endpoint home
-    router.get('/home', (req, res) => {
+    },
+  },
+  {
+    method: 'GET',
+    path: '/home',
+    handler: (request, h) => {
       const homeData = {
         message: 'Welcome to SkinCheck!',
         description: 'This is your home screen in the SkinCheck app.',
         tips: [
           'Check your skin regularly.',
           'Consult a dermatologist for proper care.',
-          'Keep your skin hydrated.'
+          'Keep your skin hydrated.',
         ],
-        status: 'active'
+        status: 'active',
       };
-      res.status(200).send(homeData);
-    });
-
-    // Endpoint untuk mengambil artikel kesehatan kulit
-    router.get('/api/articles', async (req, res) => {
-      const articleUrl = 'https://www.healthline.com/skin-care'; 
+      return h.response(homeData).code(200);
+    },
+  },
+  {
+    method: 'GET',
+    path: '/api/articles',
+    handler: async (request, h) => {
+      const articleUrl = 'https://www.healthline.com/skin-care';
       try {
-        const article = await scrapeSkinCareArticle(articleUrl);
-        res.status(200).send({ article });
+        const article = await scrapeSkinCareArticle(articleUrl); // Assuming this function exists
+        return h.response({ article }).code(200);
       } catch (error) {
-        res.status(500).send({ error: 'Error scraping article' });
+        return h.response({ error: 'Error scraping article' }).code(500);
       }
-    });
+    },
+  },
+  {
+    method: 'GET',
+    path: '/api/healthcheck',
+    handler: (request, h) => {
+      return h.response({ status: 'up' }).code(200);
+    },
+  },
+  {
+    method: 'GET',
+    path: '/',
+    handler: (request, h) => {
+      return h.response('Hello, SkinCheck!').code(200);
+    },
+  },
+];
 
-    // Endpoint healthcheck untuk simulasi
-    router.get('/api/healthcheck', (req, res) => {
-      res.status(200).send({ status: 'up' });
-    });
-
-    // Endpoint root
-    router.get('/', (req, res) => {
-      res.send('Hello, SkinCheck!');
-    });
-
-  } catch (error) {
-    console.error("Server initialization failed:", error);
-    process.exit(1); // Menghentikan aplikasi jika Firebase gagal diinisialisasi
-  }
-}
-
-startServer(); // Menjalankan server setelah Firebase siap
-
-module.exports = router;
+module.exports = routes;

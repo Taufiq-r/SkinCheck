@@ -1,21 +1,50 @@
-const express = require('express');
-const { initializeFirebase } = require('../config/firebase'); // Mengimpor firebase dari folder config
-const routes = require('./routes'); // Mengimpor routes dari file routes.js
-
-const app = express();
-const port = process.env.PORT || 8080;
-
-// Menginisialisasi Firebase
-initializeFirebase();
-
-// Middleware untuk parsing JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Menggunakan routes yang sudah didefinisikan di routes.js
-app.use('/', routes);
-
-// Menjalankan server pada port yang sudah didefinisikan
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+require('dotenv').config();
+ 
+const Hapi = require('@hapi/hapi');
+const routes = require('../server/routes');
+const loadModel = require('../services/loadModel');
+const InputError = require('../exceptions/InputError');
+ 
+(async () => {
+    const server = Hapi.server({
+        port: process.env.PORT || 4000,
+        host: '0.0.0.0',
+        routes: {
+            cors: {
+              origin: ['*'],
+            },
+        },
+    });
+ 
+    const model = await loadModel();
+    server.app.model = model;
+ 
+    server.route(routes);
+ 
+    server.ext('onPreResponse', function (request, h) {
+        const response = request.response;
+ 
+        if (response instanceof InputError) {
+            const newResponse = h.response({
+                status: 'fail',
+                message: `${response.message}`
+            })
+            newResponse.code(response.statusCode)
+            return newResponse;
+        }
+ 
+        if (response.isBoom) {
+            const newResponse = h.response({
+                status: 'fail',
+                message: response.message
+            })
+            newResponse.code(response.output.statusCode)
+            return newResponse;
+        }
+ 
+        return h.continue;
+    });
+ 
+    await server.start();
+    console.log(`Server start at: ${server.info.uri}`);
+})();
