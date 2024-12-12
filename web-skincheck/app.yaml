@@ -1,0 +1,8 @@
+runtime: nodejs18
+
+handlers:
+  - url: /assets
+    static_dir: assets
+  - url: /
+    static_files: index.html
+    upload: index.html

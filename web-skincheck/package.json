@@ -1,0 +1,12 @@
+{
+    "name": "skincheck-landing-page",
+    "version": "1.0.0",
+    "description": "Landing page for Skin Check",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1"
+    }
+  }

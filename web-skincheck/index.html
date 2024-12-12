@@ -3,21 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skin Check</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <title>Skin Check - Cek Kesehatan Kulit Anda</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        const baseURL = "https://skincheck-263817187065.us-central1.run.app";
+    </script>
 </head>
 <body>
+    <!-- Header Section -->
     <header>
-        <img src="img/logo2.png" alt="Skin Health Logo">
-        <h1>Skin Check</h1>
+        <div class="container">
+            <img src="assets/img/logo2.png" alt="Skin Health Logo" class="logo">
+            <h1>Skin Check</h1>
+        </div>
     </header>
 
-    <div id="upload-section">
-        <h2>Upload Gambar Kulit Anda</h2>
-        <input type="file" id="imageUpload" accept="image/*">
-        <button onclick="startPrediction()">Mulai Prediksi</button>
-        <div id="result"></div>
-    </div>
-<script src="assets/script.js"></script>
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <h2>Cek Kesehatan Kulit Anda dengan Mudah</h2>
+            <p>
+                Aplikasi berbasis AI untuk membantu mendeteksi masalah kulit hanya dengan mengunggah foto kulit Anda.
+            </p>
+            <button onclick="scrollToUpload()">Coba Sekarang</button>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload-section">
+        <div class="container">
+            <h2>Upload Gambar Kulit Anda</h2>
+            <input type="file" id="imageUpload" accept="image/*">
+            <button id="predictButton">Mulai Prediksi</button>
+            <div id="loading" style="display: none;">Loading...</div>
+            <div id="result"></div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Skin Check. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
