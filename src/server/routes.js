@@ -65,6 +65,7 @@ const routes = [
         const result = await predictImage(file);
         return h.response(result).code(200);
       } catch (error) {
+        console.error('Prediction error:', error);
         return h.response({ error: 'Error processing image' }).code(500);
       }
     },
