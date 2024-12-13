@@ -1,74 +1,24 @@
-const admin = require('firebase-admin');
-const { getFirebaseCredentials } = require('../config/secretManager');
-const { predictImage } = require('../services/predict'); // Import predictImage
-
-async function initializeFirebase() {
-  try {
-    const serviceAccount = await getFirebaseCredentials();
-    if (!admin.apps.length) {
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-      });
-    } else {
-      admin.app();
-    }
-    console.log("Firebase Admin SDK Initialized");
-  } catch (error) {
-    console.error("Error initializing Firebase Admin SDK:", error);
-    throw new Error("Firebase initialization failed");
-  }
-}
+const { postPredictHandler, postPredictHistoriesHandler } = require('../server/handler');
+const fetchArticles = require('../services/articlesService');
 
 const routes = [
   {
-    method: 'GET',
-    path: '/api/articles/data',
-    handler: async (request, h) => {
-      const diseaseId = request.query.id;
-      if (!diseaseId) {
-        return h.response({ error: "Parameter 'id' required." }).code(400);
-      }
-
-      try {
-        const db = admin.firestore();
-        const diseaseRef = db.collection("articles").doc(diseaseId);
-        const doc = await diseaseRef.get();
-
-        if (!doc.exists) {
-          return h.response({ error: "Article data not found." }).code(404);
-        }
-
-        return h.response({ data: doc.data() }).code(200);
-      } catch (error) {
-        console.error("Error:", error);
-        return h.response({ error: "Server error." }).code(500);
-      }
+    method: 'POST',
+    path: '/api/predict',
+    handler: postPredictHandler,
+    options: {
+      payload: {
+        allow: 'multipart/form-data',
+        maxBytes: 10485760, // Batasi ukuran file hingga 10MB
+        parse: true, // Memproses file sebagai buffer
+        output: 'data', // Mengambil data file sebagai buffer
+      },
     },
   },
   {
-    method: 'POST',
-    path: '/api/predict',
-    options: {
-      payload: {
-        maxBytes: 10485760, // Limit file size to 10MB
-        parse: true,
-        output: 'data', // Get the file data as a buffer
-      },
-    },
-    handler: async (request, h) => {
-      const file = request.payload.file;
-      if (!file) {
-        return h.response({ error: 'No file uploaded' }).code(400);
-      }
-
-      try {
-        const result = await predictImage(file);
-        return h.response(result).code(200);
-      } catch (error) {
-        console.error('Prediction error:', error);
-        return h.response({ error: 'Error processing image' }).code(500);
-      }
-    },
+    method: 'GET',
+    path: '/api/predict/histories',
+    handler: postPredictHistoriesHandler, // Menghubungkan handler postPredictHistoriesHandler
   },
   {
     method: 'GET',
@@ -91,12 +41,12 @@ const routes = [
     method: 'GET',
     path: '/api/articles',
     handler: async (request, h) => {
-      const articleUrl = 'https://www.healthline.com/skin-care';
       try {
-        const article = await scrapeSkinCareArticle(articleUrl); // Assuming this function exists
-        return h.response({ article }).code(200);
+        const articles = await fetchArticles();
+        return h.response({ status: 'success', data: articles }).code(200);
       } catch (error) {
-        return h.response({ error: 'Error scraping article' }).code(500);
+        console.error('Error fetching articles:', error);
+        return h.response({ status: 'fail', message: 'Unable to fetch articles' }).code(500);
       }
     },
   },
