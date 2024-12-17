@@ -20,6 +20,8 @@ nav {
     color: #000000;
     padding: 15px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: inherit;
 }
 
 nav img {
@@ -39,7 +41,7 @@ nav li {
     font-size: 24px;
 }
 
-/* Container Styling */
+/* Kontainer Umum (Dashboard, History, dll) */
 .container {
     display: flex;
     flex-direction: column;
@@ -49,20 +51,22 @@ nav li {
     padding: 20px;
     background-color: #f5f5f5;
     border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 800px;
 }
 
-/* Button Styling */
+/* Tombol Capture dan Predict*/
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 10px; /* Jarak antar tombol */
     margin: 20px 0;
     flex-wrap: wrap;
 }
 
-#captureButton, #predictButton, #fileInput + label {
+/* Tombol Capture */
+#captureButton {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -72,16 +76,50 @@ nav li {
     transition: background-color 0.3s ease;
 }
 
-#captureButton:hover, #predictButton:hover, #fileInput + label:hover {
+#captureButton:hover {
     background-color: #27ae60;
 }
 
+/* Tombol Predict */
+#predictButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2ecc71;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#predictButton:hover {
+    background-color: #27ae60;
+}
+
+/* Tombol Select File */
 #fileInput + label {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
     display: inline-block;
     text-align: center;
 }
 
-/* Login & SignUp Forms */
+#fileInput + label:hover {
+    background-color: #e67e22;
+}
+
+/* Responsivitas untuk tombol Select File */
+@media (max-width: 768px) {
+    #fileInput + label {
+        font-size: 14px;
+    }
+}
+
+
+/* Kontainer Khusus untuk Login dan Sign Up */
 .login-signup-container {
     display: flex;
     flex-direction: column;
@@ -91,13 +129,21 @@ nav li {
     padding: 25px;
     background-color: #f5f5f5;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 90%;
     max-width: 400px;
 }
 
+/* Logo di Login/Sign Up */
 .login-signup-container img {
     margin-bottom: 15px;
     height: 60px;
+}
+
+/* Styling Form untuk Login dan Sign Up */
+.login-signup-container h2 {
+    margin: 10px 0;
+    font-size: 18px;
 }
 
 .login-signup-container form {
@@ -106,8 +152,11 @@ nav li {
     width: 100%;
 }
 
-.login-signup-container input[type="text"], .login-signup-container input[type="password"] {
+.login-signup-container input[type="text"],
+.login-signup-container input[type="password"] {
     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     margin: 8px 0;
 }
 
@@ -117,8 +166,18 @@ nav li {
     color: #fff;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .login-signup-container button:hover {
     background-color: #27ae60;
 }
+
+/* Styling untuk halaman lain */
+.history-list,
+.image-preview,
+.result-text {
+    margin-top: 20px;
+}
+
