@@ -1,5 +1,6 @@
 const { postPredictHandler, postPredictHistoriesHandler } = require('../server/handler');
 const fetchArticles = require('../services/articlesService');
+const { loginHandler, logoutHandler, signupHandler } = require('../server/authHandler');
 
 const routes = [
   {
@@ -19,6 +20,23 @@ const routes = [
     method: 'GET',
     path: '/api/predict/histories',
     handler: postPredictHistoriesHandler, // Menghubungkan handler postPredictHistoriesHandler
+  },
+
+  {
+    method: 'POST',
+    path: '/api/login',
+    handler: loginHandler,  // Menambahkan handler login
+  },
+
+  {
+    method: 'POST',
+    path: '/api/logout',
+    handler: logoutHandler, // Menambahkan handler logout
+  },
+  {
+    method: 'POST',
+    path: '/api/signup',
+    handler: signupHandler, // Menambahkan handler sign up
   },
   {
     method: 'GET',
