@@ -1,8 +1,38 @@
-runtime: nodejs18
+runtime: python39
 
 handlers:
-  - url: /assets
-    static_dir: assets
-  - url: /
-    static_files: index.html
-    upload: index.html
+- url: /images
+  static_dir: images
+
+- url: /style\.css
+  static_files: style.css
+  upload: style.css
+
+- url: /script\.js
+  static_files: script.js
+  upload: script.js
+
+- url: /history\.html
+  static_files: history.html
+  upload: history.html
+
+- url: /login\.html
+  static_files: login.html
+  upload: login.html
+
+- url: /signup\.html
+  static_files: signup.html
+  upload: signup.html
+
+- url: /result\.html
+  static_files: result.html
+  upload: result.html
+
+- url: /
+  static_files: login.html
+  upload: login.html
+
+- url: /.*\.(css|js|html|png|jpg|jpeg|gif|svg|json|ico)
+  static_files: \1
+  upload: .*\.(css|js|html|png|jpg|jpeg|gif|svg|json|ico)
+

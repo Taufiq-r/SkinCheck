@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SkinCheck - Dashboard</title>
+    <title>SkinCheck - Hasil Prediksi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,15 +17,11 @@
 
     <div class="container">
         <div class="image-preview">
-            <img id="imagePreview" src="images/default-image.png" alt="Preview Gambar">
+            <img id="resultImage" src="" alt="Hasil Prediksi">
         </div>
-        <div class="buttons">
-            <button id="captureButton">Capture</button>
-            <label for="fileInput">
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                Select File
-            </label>
-            <button id="predictButton">Predict</button>
+        <div class="result-text">
+            <h2>Nama Penyakit: <span id="diseaseName"></span></h2>
+            <p id="diseaseDescription"></p>
         </div>
     </div>
 
